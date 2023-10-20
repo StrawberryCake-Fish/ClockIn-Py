@@ -13,5 +13,6 @@ class ClockEnums(Enum):
 
 @unique
 class ConfigEnums(Enum):
+    APPIUM_PORT = '4723'
     APPIUM_SECTION = 'appium'
-    ACCOUNT_SECTION = 'account'
+    APPIUM_CONFIG = 'config'

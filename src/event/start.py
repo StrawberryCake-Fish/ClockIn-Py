@@ -1,5 +1,4 @@
 from typing import NoReturn
-
 from src.common import SingletonMeta
 from src.event.event import ClockEvents
 from src.handle.handle import StartHandler, CheckHandler, ClockHandler, RestartHandler, DoneHandler

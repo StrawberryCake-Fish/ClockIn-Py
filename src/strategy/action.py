@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from typing import NoReturn
-
 from src.common.enums import ClockEnums
 from src.utils import Logger
 
