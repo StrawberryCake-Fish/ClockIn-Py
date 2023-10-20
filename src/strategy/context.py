@@ -1,6 +1,6 @@
-from typing import NoReturn, Any
-from src.common.strategy import Strategy
-from src.event.enums import ClockEnums
+from typing import NoReturn
+from src.strategy.action import Strategy
+from src.common.enums import ClockEnums
 
 
 class Context:

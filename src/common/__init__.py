@@ -1,4 +1,8 @@
-from src.common.context import Context
-from src.common.strategy import StartStrategy
+class SingletonMeta(type):
+    _instances = {}
 
-CommonContext: Context = Context(StartStrategy())
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            instance = super().__call__(*args, **kwargs)
+            cls._instances[cls] = instance
+        return cls._instances[cls]

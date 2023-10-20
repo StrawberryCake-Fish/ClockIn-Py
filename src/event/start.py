@@ -1,19 +1,19 @@
 from typing import NoReturn
+
+from src.common import SingletonMeta
 from src.event.event import ClockEvents
 from src.handle.handle import StartHandler, CheckHandler, ClockHandler, RestartHandler, DoneHandler
 
 
-class StartEvent:
+class StartEvent(metaclass=SingletonMeta):
     _link = StartHandler()
     _link.set_next(CheckHandler()).set_next(ClockHandler()).set_next(RestartHandler()).set_next(
         DoneHandler())
 
-    @classmethod
-    def _action(cls, event: ClockEvents) -> NoReturn:
-        result = cls._link.handle(event)
+    def _action(self, event: ClockEvents) -> NoReturn:
+        result = self._link.handle(event)
         if isinstance(result, ClockEvents):
-            cls.link(result)
+            self.link(result)
 
-    @classmethod
-    def link(cls, event: ClockEvents) -> NoReturn:
-        cls._action(event)
+    def link(self, event: ClockEvents) -> NoReturn:
+        self._action(event)
