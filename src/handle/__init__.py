@@ -1,8 +1,6 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
-from typing import Any
-
-from src.enums.clock import ClockEnums
+from src.event.event import ClockEvents
 from src.utils import Logger
 
 
@@ -12,7 +10,7 @@ class Handler(ABC):
         pass
 
     @abstractmethod
-    def handle(self, request: ClockEnums) -> Handler:
+    def handle(self, request: ClockEvents) -> Handler:
         pass
 
 
@@ -24,7 +22,8 @@ class AbstractHandler(Handler):
         return handler
 
     @abstractmethod
-    def handle(self, request: ClockEnums) -> Handler:
+    def handle(self, request: ClockEvents) -> Handler | ClockEvents:
         if self._next_handler:
             return self._next_handler.handle(request)
-        Logger.info("End!")
+        Logger.info("Link exit!")
+        return request
