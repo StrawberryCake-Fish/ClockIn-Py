@@ -1,8 +1,7 @@
 import subprocess
 import psutil
-from appium.webdriver.webdriver import WebDriver
-
 import src
+from appium.webdriver.webdriver import WebDriver
 from psutil import NoSuchProcess
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
@@ -10,13 +9,11 @@ from typing import NoReturn
 from appium import webdriver
 from appium.options.common import AppiumOptions
 from src.common import SingletonMeta
-from src.common.enums import ConfigEnums
-from src.env import Env
+from src.common.const import ConfigEnums
 from src.utils import Logger, Task
 
 
 class AppiumStart(metaclass=SingletonMeta):
-    Env().argument()
     _process: subprocess.Popen | None = None
 
     def start(self) -> NoReturn:
@@ -72,7 +69,7 @@ class AppiumDriver(metaclass=SingletonMeta):
     @staticmethod
     def wait(driver: WebDriver, locator: tuple[str, str]) -> NoReturn:
         try:
-            return WebDriverWait(driver=driver, timeout=int(src.CONF.dict().get(ConfigEnums.APPIUM_CONFIG)['timeout']),
+            return WebDriverWait(driver=driver, timeout=int(src.CONF.get(ConfigEnums.APPIUM_CONFIG.value)['timeout']),
                                  poll_frequency=0.5).until(expected_conditions.presence_of_element_located(locator))
         except Exception as e:
             Logger.error(e)

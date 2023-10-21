@@ -1,41 +1,61 @@
-from abc import ABC, abstractmethod
+from __future__ import annotations
+from enum import Enum, unique
 from typing import NoReturn
-from src.common.enums import ClockEnums
+from src.strategy import Strategy, Context
 from src.utils import Logger
 
 
-class Strategy(ABC):
-
-    @abstractmethod
-    def do_action(self) -> NoReturn:
-        Logger.info("Strategy.do_action!")
+@unique
+class StrategyEnums(Enum):
+    START = 'START'
+    CLOCK = 'CLOCK'
+    RESTART = 'RESTART'
+    DONE = 'DONE'
 
 
 class StartStrategy(Strategy):
-    def do_action(self) -> ClockEnums:
+    def action(self) -> StrategyEnums:
         Logger.info("StartStrategy.do_action!")
-        return ClockEnums.CHECK
-
-
-class CheckStrategy(Strategy):
-    def do_action(self) -> ClockEnums:
-        Logger.info("CheckStrategy.do_action!")
-        return ClockEnums.DONE
+        # TODO 执行登录操作，输入账号密码点击登录
+        return StrategyEnums.CLOCK
 
 
 class ClockStrategy(Strategy):
-    def do_action(self) -> ClockEnums:
+    def action(self) -> StrategyEnums:
         Logger.info("ClockStrategy.do_action!")
-        return ClockEnums.DONE
+        return StrategyEnums.DONE
 
 
 class RestartStrategy(Strategy):
-    def do_action(self) -> ClockEnums:
+    def action(self) -> StrategyEnums:
         Logger.info("RestartStrategy.do_action!")
-        return ClockEnums.DONE
+        return StrategyEnums.DONE
 
 
 class DoneStrategy(Strategy):
-    def do_action(self) -> ClockEnums:
+    def action(self) -> StrategyEnums:
         Logger.info("DoneStrategy.do_action!")
-        return ClockEnums.EXIT
+        return StrategyEnums.DONE
+
+
+@unique
+class StrategyAction(Enum):
+    START = (StartStrategy(),)
+    CLOCK = (ClockStrategy(),)
+    RESTART = (RestartStrategy(),)
+    DONE = (DoneStrategy(),)
+
+    def __init__(self, event: Strategy) -> NoReturn:
+        self.event = event
+
+    @staticmethod
+    def find(source: StrategyEnums) -> StrategyAction:
+        for i in StrategyAction:
+            if i.name == source.name:
+                return i
+            else:
+                raise TimeoutError('StrategyAction find not found!')
+
+    def action(self) -> StrategyEnums:
+        Context().strategy = self.event
+        return Context().do_business_logic()

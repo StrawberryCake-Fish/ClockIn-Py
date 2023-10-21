@@ -1,29 +1,17 @@
-import time
-
-from src.common.appium import AppiumStart, AppiumDriver
-from src.event.event import ClockEvents
-from src.event.start import StartEvent
-from src.utils import Task, Logger
+from src.event import Event
+from src.strategy.action import StrategyEnums
+from src.utils import Task
 
 
 class Main:
-    link = StartEvent()
+    def __init__(self):
+        Event().argument()
 
-    @classmethod
-    def run(cls):
-        # cls.link.link(ClockEvents.START)
-        time.sleep(10)
-
-        appium = AppiumDriver()
-        appium.driver()
-        Logger.info(appium.driver().current_activity)
-        time.sleep(30)
-        appium.quit()
-
-        time.sleep(10)
-        AppiumStart().kill()
+    @staticmethod
+    def run():
+        Event().link(StrategyEnums.START)
         Task.wait_completion()
 
 
 if __name__ == '__main__':
-    Main.run()
+    Main().run()
