@@ -1,6 +1,7 @@
 import subprocess
 import psutil
 import src
+from appium.webdriver import WebElement
 from appium.webdriver.webdriver import WebDriver
 from psutil import NoSuchProcess
 from selenium.webdriver.support import expected_conditions
@@ -48,28 +49,31 @@ class AppiumStart(metaclass=SingletonMeta):
 
 
 class AppiumDriver(metaclass=SingletonMeta):
-    _driver: WebDriver
-
     def __init__(self) -> NoReturn:
-        options = AppiumOptions()
+        self._driver: WebDriver | None = None
+        self._options = AppiumOptions()
         for k, v in src.CONF.get(ConfigEnums.APPIUM_SECTION.value).items():
-            options.set_capability(k, v)
-        self._driver = webdriver.Remote(
-            command_executor=f'http://127.0.0.1:{ConfigEnums.APPIUM_PORT.value}',
-            options=options
-        )
+            self._options.set_capability(k, v)
 
     def driver(self) -> WebDriver:
+        if self._driver is None:
+            self._driver = webdriver.Remote(command_executor=f'http://127.0.0.1:{ConfigEnums.APPIUM_PORT.value}',
+                                            options=self._options)
         return self._driver
 
-    def quit(self) -> NoReturn:
-        if self._driver:
-            self._driver.quit()
+    def restart(self) -> NoReturn:
+        package = src.CONF.get(ConfigEnums.APPIUM_SECTION.value)['appPackage']
+        self._driver.terminate_app(package)
+        self._driver.activate_app(package)
+        Logger.info('Application restart.')
 
-    @staticmethod
-    def wait(driver: WebDriver, locator: tuple[str, str]) -> NoReturn:
-        try:
-            return WebDriverWait(driver=driver, timeout=int(src.CONF.get(ConfigEnums.APPIUM_CONFIG.value)['timeout']),
-                                 poll_frequency=0.5).until(expected_conditions.presence_of_element_located(locator))
-        except Exception as e:
-            Logger.error(e)
+    def quit(self) -> NoReturn:
+        if self._driver is not None:
+            self._driver.quit()
+            self._driver = None
+        Logger.info('Driver quit.')
+
+    def wait(self, locator: tuple[str, str]) -> WebElement:
+        return WebDriverWait(driver=self._driver,
+                             timeout=int(src.CONF.get(ConfigEnums.APPIUM_CONFIG.value)['timeout']),
+                             poll_frequency=0.5).until(expected_conditions.presence_of_element_located(locator))

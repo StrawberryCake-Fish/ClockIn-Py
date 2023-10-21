@@ -1,8 +1,5 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
-from typing import NoReturn
-
-from appium.webdriver.webdriver import WebDriver
 from src.common.appium import AppiumStart, AppiumDriver
 from src.common.const import ConfigEnums
 from src.strategy.action import StrategyEnums, StrategyAction
@@ -21,14 +18,8 @@ class Handler(ABC):
 
 class AbstractHandler(Handler):
     AppiumStart().start()
-    _appium = AppiumDriver()
+    appium = AppiumDriver()
     _next_handler: Handler = None
-
-    def get_driver(self) -> WebDriver:
-        return self._appium.driver()
-
-    def done(self) -> NoReturn:
-        self._appium.quit()
 
     def set_next(self, handler: Handler) -> Handler:
         self._next_handler = handler
@@ -46,14 +37,14 @@ class StartHandler(AbstractHandler):
     def handle(self, request: StrategyEnums) -> Handler | StrategyEnums:
         if request == StrategyEnums.START:
             Logger.info(f'StartHandler {request.name}')
-            activity = self.get_driver().current_activity
+            activity = self.appium.driver().current_activity
             match activity:
                 case ConfigEnums.HOME_PAGE.value:
                     return super().handle(StrategyEnums.CLOCK)
                 case ConfigEnums.CLOCK_PAGE.value:
                     return super().handle(StrategyEnums.CLOCK)
                 case ConfigEnums.LOGIN_PAGE.value:
-                    return super().handle(StrategyAction.find(request).action())
+                    return super().handle(StrategyAction.find(request).action(self.appium))
         else:
             return super().handle(request)
 
@@ -62,7 +53,7 @@ class ClockHandler(AbstractHandler):
     def handle(self, request: StrategyEnums) -> Handler | StrategyEnums:
         if request == StrategyEnums.CLOCK:
             Logger.info(f'ClockHandler {request.name}')
-            return super().handle(StrategyAction.CLOCK.action())
+            return super().handle(StrategyAction.CLOCK.action(self.appium))
         else:
             return super().handle(request)
 
@@ -71,7 +62,7 @@ class RestartHandler(AbstractHandler):
     def handle(self, request: StrategyEnums) -> Handler | StrategyEnums:
         if request == StrategyEnums.RESTART:
             Logger.info(f'RestartHandler {request.name}')
-            return super().handle(StrategyAction.RESTART.action())
+            return super().handle(StrategyAction.RESTART.action(self.appium))
         else:
             return super().handle(request)
 
@@ -80,6 +71,6 @@ class DoneHandler(AbstractHandler):
     def handle(self, request: StrategyEnums) -> Handler | StrategyEnums:
         if request == StrategyEnums.DONE:
             Logger.info(f'DoneHandler {request.name}')
-            self.done()
+            self.appium.quit()
         else:
             return super().handle(request)

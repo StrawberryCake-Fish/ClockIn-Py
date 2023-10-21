@@ -2,13 +2,14 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import NoReturn, Any
 from src.common import SingletonMeta
+from src.common.appium import AppiumDriver
 from src.utils import Logger
 
 
 class Strategy(ABC):
 
     @abstractmethod
-    def action(self) -> NoReturn:
+    def action(self, driver: AppiumDriver) -> NoReturn:
         Logger.info("Strategy.do_action!")
 
 
@@ -24,5 +25,5 @@ class Context(metaclass=SingletonMeta):
     def strategy(self, event: Strategy) -> NoReturn:
         self._strategy = event
 
-    def do_business_logic(self) -> Any:
-        return self._strategy.action()
+    def do_business_logic(self, driver: AppiumDriver) -> Any:
+        return self._strategy.action(driver)
