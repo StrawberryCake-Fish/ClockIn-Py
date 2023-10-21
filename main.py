@@ -1,21 +1,27 @@
 import time
 
-from src.common.appium import AppiumStart
+from src.common.appium import AppiumStart, AppiumDriver
 from src.event.event import ClockEvents
 from src.event.start import StartEvent
-from src.utils import Task
+from src.utils import Task, Logger
 
 
 class Main:
-    appium_event = AppiumStart()
     link = StartEvent()
 
     @classmethod
     def run(cls):
-        cls.appium_event.start()
-        cls.link.link(ClockEvents.START)
+        # cls.link.link(ClockEvents.START)
         time.sleep(10)
-        cls.appium_event.kill()
+
+        appium = AppiumDriver()
+        appium.driver()
+        Logger.info(appium.driver().current_activity)
+        time.sleep(30)
+        appium.quit()
+
+        time.sleep(10)
+        AppiumStart().kill()
         Task.wait_completion()
 
 

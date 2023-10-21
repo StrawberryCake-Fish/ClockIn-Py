@@ -1,0 +1,13 @@
+{
+  "appium": {
+    "platformName": "Android",
+    "automationName": "uiautomator2",
+    "appPackage": "com.alibaba.android.rimet",
+    "appActivity": "com.alibaba.android.rimet.biz.LaunchHomeActivity",
+    "deviceName": "c77f145e",
+    "noReset": true
+  },
+  "config": {
+    "timeout": 20
+  }
+}

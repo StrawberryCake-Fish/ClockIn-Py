@@ -1,9 +1,10 @@
-import configparser
+import json
 
 
-class ParserToDict(configparser.ConfigParser):
-    def dict(self):
-        conf = dict(self._sections)
-        for k in conf:
-            conf[k] = dict(conf[k])
-        return conf
+class Utils:
+
+    @staticmethod
+    def load_json(file: str) -> dict:
+        with open(file, encoding='utf-8') as f:
+            data = json.load(f)
+        return data

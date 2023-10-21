@@ -7,6 +7,15 @@ class StartHandler(AbstractHandler):
     def handle(self, request: ClockEvents) -> Handler | ClockEvents:
         if request == ClockEvents.START:
             Logger.info(f'StartHandler ==> {request.name}')
+            activity = self.get_driver().current_activity
+            match activity:
+                case '.biz.LaunchHomeActivity':
+                    return super().handle(ClockEvents.CLOCK)
+                case 'com.alibaba.lightapp.runtime.ariver.TheOneActivityMainTaskSwipe':
+                    return super().handle(ClockEvents.CLOCK)
+                case _:
+                    # TODO 执行登录操作
+                    pass
             return super().handle(ClockEvents.get_event(request.do_action()))
         else:
             return super().handle(request)

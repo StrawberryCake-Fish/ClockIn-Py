@@ -1,12 +1,11 @@
 import argparse
 
 import src
-from src.utils.tools import ParserToDict
+from src.utils.tools import Utils
 
 
 class Env:
-    src.CONF = ParserToDict()
-    src.CONF.read(src.CONFIG_PATH, 'utf-8')
+    src.CONF = Utils.load_json(src.CONFIG_PATH)
 
     def __getitem__(self, key):
         return self.__getattribute__(key)

@@ -1,5 +1,9 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
+
+from appium.webdriver.webdriver import WebDriver
+
+from src.common.appium import AppiumDriver, AppiumStart
 from src.event.event import ClockEvents
 from src.utils import Logger
 
@@ -15,7 +19,12 @@ class Handler(ABC):
 
 
 class AbstractHandler(Handler):
+    AppiumStart().start()
+    _appium = AppiumDriver()
     _next_handler: Handler = None
+
+    def get_driver(self) -> WebDriver:
+        return self._appium.driver()
 
     def set_next(self, handler: Handler) -> Handler:
         self._next_handler = handler

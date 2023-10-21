@@ -1,6 +1,8 @@
 from __future__ import annotations
+import atexit
 from enum import unique, Enum
 from typing import NoReturn
+from src.common.appium import AppiumStart
 from src.strategy import CommonContext
 from src.strategy.action import Strategy, StartStrategy, CheckStrategy, ClockStrategy, RestartStrategy, DoneStrategy
 from src.common.enums import ClockEnums
@@ -27,3 +29,10 @@ class ClockEvents(Enum):
             if i.name == enum.name:
                 return i
         return None
+
+
+class ExitEvent:
+    @staticmethod
+    @atexit.register
+    def kill_appium():
+        AppiumStart().kill()
