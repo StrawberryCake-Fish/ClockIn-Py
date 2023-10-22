@@ -28,7 +28,7 @@ class Event(metaclass=SingletonMeta):
         Logger.info('Job start.')
         # src.Scheduler.add_job(self.link, trigger='cron', day_of_week='mon-fri', hour=9, minute=30,
         #                       args=[StrategyEnums.START])
-        src.Scheduler.add_job(self.link, trigger='cron', second=0, minute=52, hour=18, args=[StrategyEnums.START])
+        src.Scheduler.add_job(self.link, trigger='cron', second=0, minute=6, hour=19, args=[StrategyEnums.START])
 
     def __getitem__(self, key) -> Any:
         return self.__getattribute__(key)

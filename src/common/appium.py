@@ -59,6 +59,8 @@ class AppiumDriver(metaclass=SingletonMeta):
         if self._driver is None:
             self._driver = webdriver.Remote(command_executor=f'http://127.0.0.1:{ConfigEnums.APPIUM_PORT.value}',
                                             options=self._options)
+            self._driver.activate_app(src.CONF.get(ConfigEnums.APPIUM_SECTION.value)['appPackage'] + '/' +
+                                      src.CONF.get(ConfigEnums.APPIUM_SECTION.value)['appActivity'])
         return self._driver
 
     def restart(self) -> NoReturn:
