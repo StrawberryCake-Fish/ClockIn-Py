@@ -4,7 +4,7 @@
     "automationName": "uiautomator2",
     "appPackage": "com.alibaba.android.rimet",
     "appActivity": "com.alibaba.android.rimet.biz.LaunchHomeActivity",
-    "deviceName": "c77f145e",
+    "deviceName": "6VPYD21420202448",
     "noReset": true
   },
   "config": {

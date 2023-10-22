@@ -2,11 +2,13 @@ from __future__ import annotations
 import argparse
 import atexit
 import src
+from apscheduler.schedulers.background import BackgroundScheduler
 from typing import NoReturn, Any
 from src.common import SingletonMeta
 from src.common.appium import AppiumStart
 from src.strategy.action import StrategyEnums
 from src.strategy.handle import StartHandler, ClockHandler, RestartHandler, DoneHandler
+from src.utils import Logger
 
 
 class Event(metaclass=SingletonMeta):
@@ -21,6 +23,12 @@ class Event(metaclass=SingletonMeta):
 
     def link(self, event: StrategyEnums) -> NoReturn:
         self._action(event)
+
+    def scheduler(self):
+        Logger.info('Job start.')
+        # src.Scheduler.add_job(self.link, trigger='cron', day_of_week='mon-fri', hour=9, minute=30,
+        #                       args=[StrategyEnums.START])
+        src.Scheduler.add_job(self.link, trigger='cron', second=0, minute=52, hour=18, args=[StrategyEnums.START])
 
     def __getitem__(self, key) -> Any:
         return self.__getattribute__(key)

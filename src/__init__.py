@@ -1,6 +1,8 @@
 import datetime
 import json
 import os
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.base import BaseScheduler
 
 PROJECT: str = 'ClockIn-Py'
 
@@ -16,3 +18,6 @@ with open(CONFIG_PATH, encoding='utf-8') as f:
 
 USERNAME: str
 PASSWORD: str
+
+Scheduler: BaseScheduler = BackgroundScheduler()
+Scheduler.start()

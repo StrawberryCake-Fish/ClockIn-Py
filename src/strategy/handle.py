@@ -45,6 +45,8 @@ class StartHandler(AbstractHandler):
                     return super().handle(StrategyEnums.CLOCK)
                 case ConfigEnums.LOGIN_PAGE.value:
                     return super().handle(StrategyAction.find(request).action(self.appium))
+                case _:
+                    return super().handle(StrategyEnums.DONE)
         else:
             return super().handle(request)
 

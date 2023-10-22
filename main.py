@@ -1,5 +1,4 @@
 from src.event import Event
-from src.strategy.action import StrategyEnums
 from src.utils import Task
 
 
@@ -9,7 +8,7 @@ class Main:
 
     @staticmethod
     def run():
-        Event().link(StrategyEnums.START)
+        Event().scheduler()
         Task.wait_completion()
 
 
