@@ -2,7 +2,6 @@ from __future__ import annotations
 import argparse
 import atexit
 import src
-from datetime import datetime
 from typing import NoReturn, Any
 from src.common import SingletonMeta
 from src.common.appium import AppiumStart
@@ -16,7 +15,6 @@ class Event(metaclass=SingletonMeta):
     def __init__(self):
         self._link = StartHandler()
         self._link.set_next(ClockHandler()).set_next(RestartHandler()).set_next(DoneHandler())
-        self._debug: bool = False
 
     def _action(self, event: StrategyEnums) -> NoReturn:
         result = self._link.handle(event)
@@ -28,7 +26,7 @@ class Event(metaclass=SingletonMeta):
 
     def scheduler(self):
         Logger.info('Job start.')
-        if self._debug:
+        if src.DBUG:
             temp = Utils.get_start_time()
             src.Scheduler.add_job(self.link, trigger='cron', second=int(temp[1][2]), minute=int(temp[1][1]),
                                   hour=int(temp[1][0]), args=[StrategyEnums.START])
@@ -52,7 +50,7 @@ class Event(metaclass=SingletonMeta):
         args = parser.parse_args()
         src.USERNAME = args.username
         src.PASSWORD = args.password
-        self._debug = args.debug
+        src.DBUG = args.debug
         return self
 
     @staticmethod

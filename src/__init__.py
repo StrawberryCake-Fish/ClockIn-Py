@@ -18,6 +18,7 @@ with open(CONFIG_PATH, encoding='utf-8') as f:
 
 USERNAME: str
 PASSWORD: str
+DBUG: bool
 
 Scheduler: BaseScheduler = BackgroundScheduler()
 Scheduler.start()
