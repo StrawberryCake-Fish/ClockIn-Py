@@ -8,6 +8,7 @@
     "noReset": true
   },
   "config": {
-    "timeout": 20
+    "timeout": 20,
+    "port": 4723
   }
 }

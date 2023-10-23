@@ -37,16 +37,21 @@ class StartHandler(AbstractHandler):
     def handle(self, request: StrategyEnums) -> Handler | StrategyEnums:
         if request == StrategyEnums.START:
             Logger.info(f'StartHandler {request.name}')
-            activity = self.appium.driver().current_activity
-            match activity:
-                case ConfigEnums.HOME_PAGE.value:
-                    return super().handle(StrategyEnums.CLOCK)
-                case ConfigEnums.CLOCK_PAGE.value:
-                    return super().handle(StrategyEnums.CLOCK)
-                case ConfigEnums.LOGIN_PAGE.value:
-                    return super().handle(StrategyAction.find(request).action(self.appium))
-                case _:
-                    return super().handle(StrategyEnums.DONE)
+            try:
+                activity = self.appium.driver().current_activity
+                Logger.info(f'Activity {activity}')
+                match activity:
+                    case ConfigEnums.SIGN_PAGE.value:
+                        return super().handle(StrategyAction.find(request).action(self.appium))
+                    case ConfigEnums.HOME_PAGE.value:
+                        return super().handle(StrategyAction.find(request).action(self.appium))
+                    case ConfigEnums.CLOCK_PAGE.value:
+                        return super().handle(StrategyEnums.CLOCK)
+                    case _:
+                        return super().handle(StrategyEnums.DONE)
+            except Exception as e:
+                Logger.error(e)
+                return StrategyEnums.RESTART
         else:
             return super().handle(request)
 

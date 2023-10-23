@@ -2,11 +2,9 @@ from __future__ import annotations
 from enum import Enum, unique
 from typing import NoReturn
 
-from selenium.webdriver.common.by import By
-
 import src
 from src.common.appium import AppiumDriver
-from src.common.const import ElementEnums, ConfigEnums
+from src.common.const import ElementEnums
 from src.strategy import Strategy, Context
 from src.utils import Logger
 
@@ -22,20 +20,31 @@ class StrategyEnums(Enum):
 class StartStrategy(Strategy):
     def action(self, driver: AppiumDriver) -> StrategyEnums:
         Logger.info("StartStrategy.do_action")
-        # TODO 执行登录操作，输入账号密码点击登录
-        return StrategyEnums.CLOCK
+        try:
+            if driver.wait(ElementEnums.Via.value, 5) is False:
+                driver.wait(ElementEnums.Username.value).send_keys(src.USERNAME)
+                driver.wait(ElementEnums.Password.value).send_keys(src.PASSWORD)
+                driver.wait(ElementEnums.Privacy.value).click()
+                driver.wait(ElementEnums.Login.value).click()
+            return StrategyEnums.CLOCK
+        except Exception as e:
+            Logger.error(e)
+            return StrategyEnums.RESTART
 
 
 class ClockStrategy(Strategy):
     def action(self, driver: AppiumDriver) -> StrategyEnums:
         Logger.info("ClockStrategy.do_action")
         try:
-            driver.wait((By.XPATH, ElementEnums.Work.value)).click()
-            driver.wait((By.XPATH, ElementEnums.Clock.value)).click()
+            driver.wait(ElementEnums.Work.value).click()
+            driver.wait(ElementEnums.Clock.value).click()
+            if driver.wait(ElementEnums.State.value, 5) is False:
+                driver.wait(ElementEnums.Close.value).click()
+                return StrategyEnums.CLOCK
+            return StrategyEnums.DONE
         except Exception as e:
             Logger.error(e)
             return StrategyEnums.RESTART
-        return StrategyEnums.DONE
 
 
 class RestartStrategy(Strategy):
@@ -46,7 +55,8 @@ class RestartStrategy(Strategy):
         except Exception as e:
             Logger.error(e)
             driver.driver()
-        return StrategyEnums.START
+        finally:
+            return StrategyEnums.START
 
 
 @unique
