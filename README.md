@@ -1,5 +1,13 @@
 # ClockIn-Py
 
+## Install
+
+```shell
+npm install -g appium
+
+appium driver install uiautomator2
+```
+
 ## Start
 
 ```shell
