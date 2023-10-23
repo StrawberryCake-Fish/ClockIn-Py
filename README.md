@@ -5,9 +5,9 @@
 ```shell
 npm install -g appium
 
-appium driver install uiautomator2
+appium --driver --install uiautomator2
 
-pip install ./requirements.txt
+pip install -r ./requirements.txt
 ```
 
 ## Start

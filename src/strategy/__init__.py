@@ -7,6 +7,7 @@ from src.utils import Logger
 
 
 class Strategy(ABC):
+    wait: bool = True
 
     @abstractmethod
     def action(self, driver: AppiumDriver) -> NoReturn:

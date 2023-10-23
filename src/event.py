@@ -13,6 +13,7 @@ from src.utils.tools import Utils
 
 class Event(metaclass=SingletonMeta):
     def __init__(self):
+        Utils.banner()
         self._link = StartHandler()
         self._link.set_next(ClockHandler()).set_next(RestartHandler()).set_next(DoneHandler())
 

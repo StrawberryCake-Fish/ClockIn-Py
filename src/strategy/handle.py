@@ -1,10 +1,5 @@
 from __future__ import annotations
-
-import random
-import time
 from abc import ABC, abstractmethod
-
-import src
 from src.common.appium import AppiumStart, AppiumDriver
 from src.common.const import ConfigEnums
 from src.strategy.action import StrategyEnums, StrategyAction
@@ -24,7 +19,6 @@ class Handler(ABC):
 class AbstractHandler(Handler):
     AppiumStart().start()
     appium = AppiumDriver()
-    wait = True
     _next_handler: Handler = None
 
     def set_next(self, handler: Handler) -> Handler:
@@ -44,9 +38,6 @@ class StartHandler(AbstractHandler):
         if request == StrategyEnums.START:
             Logger.info(f'StartHandler {request.name}')
             try:
-                if src.DBUG is False and self.wait:
-                    time.sleep(random.randint(2, 6) * 60)
-                    self.wait = False
                 activity = self.appium.driver().current_activity
                 Logger.info(f'Activity {activity}')
                 match activity:
@@ -88,6 +79,5 @@ class DoneHandler(AbstractHandler):
         if request == StrategyEnums.DONE:
             Logger.info(f'DoneHandler {request.name}')
             self.appium.quit()
-            self.wait = True
         else:
             return super().handle(request)

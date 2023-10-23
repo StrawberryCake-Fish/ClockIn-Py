@@ -1,4 +1,7 @@
 from __future__ import annotations
+
+import random
+import time
 from enum import Enum, unique
 from typing import NoReturn
 
@@ -20,6 +23,9 @@ class StrategyEnums(Enum):
 class StartStrategy(Strategy):
     def action(self, driver: AppiumDriver) -> StrategyEnums:
         Logger.info("StartStrategy.do_action")
+        if src.DBUG is False and self.wait:
+            time.sleep(random.randint(2, 6) * 60)
+            self.wait = False
         try:
             if driver.wait(ElementEnums.Via.value, 5) is False:
                 driver.wait(ElementEnums.Username.value).send_keys(src.USERNAME)
@@ -38,7 +44,7 @@ class ClockStrategy(Strategy):
         try:
             driver.wait(ElementEnums.Work.value).click()
             driver.wait(ElementEnums.Clock.value).click()
-            if driver.wait(ElementEnums.State.value, 5) is False:
+            if driver.wait(ElementEnums.State.value, 8) is False:
                 driver.wait(ElementEnums.Close.value).click()
                 return StrategyEnums.CLOCK
             return StrategyEnums.DONE
@@ -55,6 +61,7 @@ class RestartStrategy(Strategy):
         except Exception as e:
             Logger.error(e)
             driver.driver()
+            self.wait = True
         finally:
             return StrategyEnums.START
 
