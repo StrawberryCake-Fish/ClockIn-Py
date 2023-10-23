@@ -19,7 +19,6 @@ class AppiumStart(metaclass=SingletonMeta):
 
     def start(self) -> NoReturn:
         if self._process is None:
-            Logger.info('AppiumStart.start')
             Task.submit(thread_name='AppiumThread', func=self._exec).start()
 
     def _exec(self) -> NoReturn:
