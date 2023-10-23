@@ -23,8 +23,8 @@ class AppiumStart(metaclass=SingletonMeta):
             Task.submit(thread_name='AppiumThread', func=self._exec).start()
 
     def _exec(self) -> NoReturn:
-        self._process = subprocess.Popen(['appium', '-p', ConfigEnums.APPIUM_PORT.value], shell=True,
-                                         stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        self._process = subprocess.Popen(['appium', '-p', str(src.CONF.get(ConfigEnums.APPIUM_CONFIG.value)['port'])],
+                                         shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         try:
             while self._process.poll() is None:
                 line = self._process.stdout.readline().strip()
@@ -59,8 +59,9 @@ class AppiumDriver(metaclass=SingletonMeta):
 
     def driver(self) -> WebDriver:
         if self._driver is None:
-            self._driver = webdriver.Remote(command_executor=f'http://127.0.0.1:{ConfigEnums.APPIUM_PORT.value}',
-                                            options=self._options)
+            self._driver = webdriver.Remote(
+                command_executor=f'http://127.0.0.1:{src.CONF.get(ConfigEnums.APPIUM_CONFIG.value)["port"]}',
+                options=self._options)
             self.restart()
         return self._driver
 

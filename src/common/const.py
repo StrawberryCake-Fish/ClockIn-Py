@@ -5,7 +5,6 @@ from selenium.webdriver.common.by import By
 
 @unique
 class ConfigEnums(Enum):
-    APPIUM_PORT = '4723'
     APPIUM_SECTION = 'appium'
     APPIUM_CONFIG = 'config'
 
