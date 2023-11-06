@@ -1,3 +1,4 @@
+from __future__ import annotations
 import subprocess
 import psutil
 import src
@@ -10,7 +11,7 @@ from typing import NoReturn
 from appium import webdriver
 from appium.options.common import AppiumOptions
 from src.common import SingletonMeta
-from src.common.const import ConfigEnums
+from src.common.const import ConfigConst
 from src.utils import Logger, Task
 
 
@@ -22,8 +23,9 @@ class AppiumStart(metaclass=SingletonMeta):
             Task.submit(thread_name='AppiumThread', func=self._exec).start()
 
     def _exec(self) -> NoReturn:
-        self._process = subprocess.Popen(['appium', '-p', str(src.CONF.get(ConfigEnums.APPIUM_CONFIG.value)['port'])],
-                                         shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        self._process = subprocess.Popen(
+            ['appium', '-p', str(src.CONF.get(ConfigConst.APPIUM_CONFIG)['port'])],
+            shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         try:
             while self._process.poll() is None:
                 line = self._process.stdout.readline().strip()
@@ -49,18 +51,18 @@ class AppiumStart(metaclass=SingletonMeta):
 
 class AppiumDriver(metaclass=SingletonMeta):
     def __init__(self) -> NoReturn:
-        self.package = src.CONF.get(ConfigEnums.APPIUM_SECTION.value)['appPackage']
-        self.activity = src.CONF.get(ConfigEnums.APPIUM_SECTION.value)['appActivity']
+        self.package = src.CONF.get(ConfigConst.APPIUM_SECTION)['appPackage']
+        self.activity = src.CONF.get(ConfigConst.APPIUM_SECTION)['appActivity']
         self._driver: WebDriver | None = None
         self._options = AppiumOptions()
-        for k, v in src.CONF.get(ConfigEnums.APPIUM_SECTION.value).items():
+        for k, v in src.CONF.get(ConfigConst.APPIUM_SECTION).items():
             self._options.set_capability(k, v)
 
     def driver(self) -> WebDriver:
         if self._driver is None:
+            port = src.CONF.get(ConfigConst.APPIUM_CONFIG)["port"]
             self._driver = webdriver.Remote(
-                command_executor=f'http://127.0.0.1:{src.CONF.get(ConfigEnums.APPIUM_CONFIG.value)["port"]}',
-                options=self._options)
+                command_executor=f'http://127.0.0.1:{port}', options=self._options)
             self.restart()
         return self._driver
 
@@ -81,7 +83,8 @@ class AppiumDriver(metaclass=SingletonMeta):
         Logger.info('Driver quit.')
 
     def wait(self, locator: tuple[str, str],
-             timeout: int = int(src.CONF.get(ConfigEnums.APPIUM_CONFIG.value)['timeout'])) -> WebElement | bool:
+             timeout: int = int(
+                 src.CONF.get(ConfigConst.APPIUM_CONFIG)['timeout'])) -> WebElement | bool:
         try:
             return (WebDriverWait(driver=self._driver, timeout=timeout, poll_frequency=0.5)
                     .until(expected_conditions.presence_of_element_located(locator)))

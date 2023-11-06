@@ -1,7 +1,8 @@
 from __future__ import annotations
+import time
 from abc import ABC, abstractmethod
 from src.common.appium import AppiumStart, AppiumDriver
-from src.common.const import ConfigEnums
+from src.common.const import ConfigConst
 from src.strategy.action import StrategyEnums, StrategyAction
 from src.utils import Logger
 
@@ -41,11 +42,14 @@ class StartHandler(AbstractHandler):
                 activity = self.appium.driver().current_activity
                 Logger.info(f'Activity {activity}')
                 match activity:
-                    case ConfigEnums.SIGN_PAGE.value:
+                    case ConfigConst.LOADING_PAGE:
+                        time.sleep(5)
+                        return super().handle(StrategyEnums.START)
+                    case ConfigConst.SIGN_PAGE:
                         return super().handle(StrategyAction.find(request).action(self.appium))
-                    case ConfigEnums.HOME_PAGE.value:
+                    case ConfigConst.HOME_PAGE:
                         return super().handle(StrategyAction.find(request).action(self.appium))
-                    case ConfigEnums.CLOCK_PAGE.value:
+                    case ConfigConst.CLOCK_PAGE:
                         return super().handle(StrategyEnums.CLOCK)
                     case _:
                         return super().handle(StrategyEnums.DONE)

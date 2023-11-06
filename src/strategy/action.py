@@ -1,11 +1,9 @@
 from __future__ import annotations
-
 import random
 import time
+import src
 from enum import Enum, unique
 from typing import NoReturn
-
-import src
 from src.common.appium import AppiumDriver
 from src.common.const import ElementEnums
 from src.strategy import Strategy, Context
@@ -27,7 +25,7 @@ class StartStrategy(Strategy):
             time.sleep(random.randint(2, 6) * 60)
             self.wait = False
         try:
-            if driver.wait(ElementEnums.Via.value, 5) is False:
+            if driver.wait(ElementEnums.Via.value) is False:
                 driver.wait(ElementEnums.Username.value).send_keys(src.USERNAME)
                 driver.wait(ElementEnums.Password.value).send_keys(src.PASSWORD)
                 driver.wait(ElementEnums.Privacy.value).click()

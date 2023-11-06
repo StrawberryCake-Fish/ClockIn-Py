@@ -10,8 +10,8 @@ class ThreadPool:
         self.tasks = queue.Queue()
         self.workers = []
 
-    def submit(self, func: Optional[Callable], *args: Optional[Any], thread_name: Optional[str] = None,
-               **kwargs: Optional[Any]) -> ThreadPool:
+    def submit(self, func: Optional[Callable], *args: Optional[Any],
+               thread_name: Optional[str] = None, **kwargs: Optional[Any]) -> ThreadPool:
         self.tasks.put((func, args, kwargs, thread_name))
         return self
 
