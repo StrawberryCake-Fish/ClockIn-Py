@@ -3,7 +3,6 @@ from enum import unique, Enum
 from selenium.webdriver.common.by import By
 
 
-@unique
 class ConfigConst:
     APPIUM_SECTION = 'appium'
     APPIUM_CONFIG = 'config'
