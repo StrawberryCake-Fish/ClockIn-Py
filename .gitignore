@@ -18,3 +18,4 @@ test_main.http
 log
 *test.*
 test
+venv
