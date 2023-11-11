@@ -42,6 +42,9 @@ class StartHandler(AbstractHandler):
                 activity = self.appium.driver().current_activity
                 Logger.info(f'Activity {activity}')
                 match activity:
+                    case ConfigConst.LAUNCHER_PAGE:
+                        time.sleep(5)
+                        return super().handle(StrategyEnums.START)
                     case ConfigConst.LOADING_PAGE:
                         time.sleep(5)
                         return super().handle(StrategyEnums.START)
@@ -82,6 +85,7 @@ class DoneHandler(AbstractHandler):
     def handle(self, request: StrategyEnums) -> Handler | StrategyEnums:
         if request == StrategyEnums.DONE:
             Logger.info(f'DoneHandler {request.name}')
+            time.sleep(5)
             self.appium.quit()
         else:
             return super().handle(request)

@@ -30,7 +30,8 @@ class AppiumStart(metaclass=SingletonMeta):
             while self._process.poll() is None:
                 line = self._process.stdout.readline().strip()
                 if line:
-                    Logger.info(line.decode('utf-8'))
+                    # Logger.info(line.decode('utf-8'))
+                    pass
         except Exception as e:
             Logger.error(e)
         if self._process.returncode != 0:
@@ -68,12 +69,8 @@ class AppiumDriver(metaclass=SingletonMeta):
 
     def restart(self) -> NoReturn:
         Logger.info('Application restart.')
-        try:
-            self._driver.terminate_app(self.package)
-            self._driver.activate_app(f'{self.package}/{self.activity}')
-        except Exception as e:
-            Logger.error(e)
-            self.quit()
+        self._driver.terminate_app(self.package)
+        self._driver.activate_app(f'{self.package}/{self.activity}')
 
     def quit(self) -> NoReturn:
         if self._driver is not None:
