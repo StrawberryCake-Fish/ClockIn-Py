@@ -21,13 +21,7 @@ class ElementEnums(Enum):
     Password = (By.ID, 'com.alibaba.android.rimet:id/et_password')
     Privacy = (By.ID, 'com.alibaba.android.rimet:id/cb_privacy')
     Login = (By.ID, 'com.alibaba.android.rimet:id/btn_next')
-
-    # Work = (By.XPATH, '//*[@resource-id="com.alibaba.android.rimet:id/recycler_view"]'
-    #                   '/android.widget.RelativeLayout[3]/android.widget.FrameLayout[1]'
-    #                   '/android.widget.ImageView[1]')
-    # Clock = (By.XPATH, '//*[@text="\u8003\u52e4\u6253\u5361"]')
     Clock = (By.XPATH, '//android.widget.LinearLayout['
                        '@resource-id="com.alibaba.android.rimet:id/tab_container"'
                        ']/android.widget.FrameLayout[4]')
-    # State = (By.XPATH, '//*[contains(@text, "\u5df2\u6253\u5361")]')
     Close = (By.ID, 'com.alibaba.android.rimet:id/close_text')

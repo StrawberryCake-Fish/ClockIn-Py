@@ -47,7 +47,6 @@ class ClockStrategy(Strategy):
                 clock_element.click()
             else:
                 return StrategyEnums.DONE
-
             close_element = driver.wait(ElementEnums.Close.value, 2)
             if isinstance(close_element, WebElement):
                 close_element.click()
