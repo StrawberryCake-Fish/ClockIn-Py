@@ -30,7 +30,6 @@ class AppiumStart(metaclass=SingletonMeta):
             while self._process.poll() is None:
                 line = self._process.stdout.readline().strip()
                 if line:
-                    # Logger.info(line.decode('utf-8'))
                     pass
         except Exception as e:
             Logger.error(e)
@@ -74,7 +73,7 @@ class AppiumDriver(metaclass=SingletonMeta):
 
     def quit(self) -> NoReturn:
         if self._driver is not None:
-            self._driver.terminate_app(self.package)
+            # self._driver.terminate_app(self.package)
             self._driver.quit()
             self._driver = None
         Logger.info('Driver quit.')

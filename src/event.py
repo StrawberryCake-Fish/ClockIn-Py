@@ -1,6 +1,8 @@
 from __future__ import annotations
 import argparse
 import atexit
+import random
+
 import src
 from typing import NoReturn, Any
 from src.common import SingletonMeta
@@ -28,18 +30,15 @@ class Event(metaclass=SingletonMeta):
 
     def scheduler(self):
         Logger.info('Job start.')
+        minute = 30 + random.randint(2, 6)
         if src.DBUG:
             temp = Utils.get_start_time()
-            src.Scheduler.add_job(
-                self.link, trigger='cron', second=int(temp[1][2]),
-                minute=int(temp[1][1]),
-                hour=int(temp[1][0]), args=[StrategyEnums.START]
-            )
+            src.Scheduler.add_job(self.link, trigger='cron', second=int(temp[1][2]),
+                                  minute=int(temp[1][1]), hour=int(temp[1][0]), args=[StrategyEnums.START])
             Logger.info(f'Starting time {temp[0]} delay to {temp[1][0]}:{temp[1][1]}:{temp[1][2]}.')
         else:
             src.Scheduler.add_job(self.link, trigger='cron', day_of_week='mon-fri', hour=9,
-                                  minute=30,
-                                  args=[StrategyEnums.START])
+                                  minute=minute, args=[StrategyEnums.START])
 
     def __getitem__(self, key) -> Any:
         return self.__getattribute__(key)
@@ -50,9 +49,9 @@ class Event(metaclass=SingletonMeta):
             description='ClockIn Tools positional arguments',
             epilog='And What can I help U?'
         )
-        parser.add_argument('--username', '-u', required=True, type=str, dest='username',
+        parser.add_argument('--username', '-u', required=False, type=str, dest='username',
                             help='Username.')
-        parser.add_argument('--password', '-p', required=True, type=str, dest='password',
+        parser.add_argument('--password', '-p', required=False, type=str, dest='password',
                             help='Password.')
         parser.add_argument('--debug', '-d', required=False, action='store_true', dest='debug',
                             help='Debug.')
