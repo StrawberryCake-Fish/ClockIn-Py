@@ -2,6 +2,7 @@ from __future__ import annotations
 import argparse
 import atexit
 import random
+import time
 
 import src
 from typing import NoReturn, Any
@@ -26,11 +27,12 @@ class Event(metaclass=SingletonMeta):
             self.link(result)
 
     def link(self, event: StrategyEnums) -> NoReturn:
+        if src.DBUG is False:
+            time.sleep(random.randint(2, 6) * 60)
         self._action(event)
 
     def scheduler(self):
         Logger.info('Job start.')
-        minute = 30 + random.randint(2, 6)
         if src.DBUG:
             temp = Utils.get_start_time()
             src.Scheduler.add_job(self.link, trigger='cron', second=int(temp[1][2]),
@@ -38,7 +40,7 @@ class Event(metaclass=SingletonMeta):
             Logger.info(f'Starting time {temp[0]} delay to {temp[1][0]}:{temp[1][1]}:{temp[1][2]}.')
         else:
             src.Scheduler.add_job(self.link, trigger='cron', day_of_week='mon-fri', hour=9,
-                                  minute=minute, args=[StrategyEnums.START])
+                                  minute=30, args=[StrategyEnums.START])
 
     def __getitem__(self, key) -> Any:
         return self.__getattribute__(key)
