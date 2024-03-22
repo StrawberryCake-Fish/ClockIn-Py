@@ -1,6 +1,4 @@
 from __future__ import annotations
-import random
-import time
 
 from appium.webdriver import WebElement
 
@@ -24,8 +22,6 @@ class StrategyEnums(Enum):
 class StartStrategy(Strategy):
     def action(self, driver: AppiumDriver) -> StrategyEnums:
         Logger.info("StartStrategy.do_action")
-        if src.DBUG is False:
-            time.sleep(random.randint(2, 6) * 60)
         try:
             if driver.wait(ElementEnums.Via.value) is False:
                 driver.wait(ElementEnums.Username.value).send_keys(src.USERNAME)
