@@ -42,8 +42,6 @@ class StartHandler(AbstractHandler):
     def handle(self, request: StrategyEnums) -> Handler | StrategyEnums:
         if request == StrategyEnums.START:
             Logger.info(f'StartHandler {request.name}')
-            if src.DBUG is False:
-                time.sleep(random.randint(2, 6) * 60)
             try:
                 activity = self.appium.driver().current_activity
                 Logger.info(f'Activity {activity}')

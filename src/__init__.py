@@ -19,6 +19,7 @@ with open(CONFIG_PATH, encoding='utf-8') as f:
 
 USERNAME: str
 PASSWORD: str
+WAIT: int
 DBUG: bool
 
 Scheduler: BaseScheduler = BackgroundScheduler()

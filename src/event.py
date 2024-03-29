@@ -27,6 +27,8 @@ class Event(metaclass=SingletonMeta):
             self.link(result)
 
     def link(self, event: StrategyEnums) -> NoReturn:
+        if src.DBUG is False:
+            time.sleep(src.WAIT)
         self._action(event)
 
     def scheduler(self):
@@ -53,11 +55,14 @@ class Event(metaclass=SingletonMeta):
                             help='Username.')
         parser.add_argument('--password', '-p', required=False, type=str, dest='password',
                             help='Password.')
+        parser.add_argument('--wait', '-w', required=False, type=int, dest='wait',
+                            help='Wait.')
         parser.add_argument('--debug', '-d', required=False, action='store_true', dest='debug',
                             help='Debug.')
         args = parser.parse_args()
         src.USERNAME = args.username
         src.PASSWORD = args.password
+        src.WAIT = args.wait
         src.DBUG = args.debug
         return self
 
