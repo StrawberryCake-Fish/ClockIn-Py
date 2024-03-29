@@ -1,7 +1,6 @@
 from __future__ import annotations
 import argparse
 import atexit
-import random
 import time
 
 import src
@@ -41,7 +40,7 @@ class Event(metaclass=SingletonMeta):
         else:
             src.Scheduler.add_job(self.link, trigger='cron', day_of_week='mon-fri', hour=9,
                                   minute=30, args=[StrategyEnums.START])
-            Logger.info(f'Time wait {src.WAIT * 60}')
+            Logger.info(f'Time wait {src.WAIT}min.')
 
     def __getitem__(self, key) -> Any:
         return self.__getattribute__(key)
