@@ -28,7 +28,7 @@ class Event(metaclass=SingletonMeta):
 
     def link(self, event: StrategyEnums) -> NoReturn:
         if src.DBUG is False:
-            time.sleep(src.WAIT)
+            time.sleep(src.WAIT * 60)
         self._action(event)
 
     def scheduler(self):
