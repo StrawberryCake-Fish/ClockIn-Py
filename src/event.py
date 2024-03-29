@@ -28,9 +28,7 @@ class Event(metaclass=SingletonMeta):
 
     def link(self, event: StrategyEnums) -> NoReturn:
         if src.DBUG is False:
-            wait = src.WAIT * 60
-            Logger.info(f'Time wait {wait}')
-            time.sleep(wait)
+            time.sleep(src.WAIT * 60)
         self._action(event)
 
     def scheduler(self):
@@ -41,6 +39,7 @@ class Event(metaclass=SingletonMeta):
                                   minute=int(temp[1][1]), hour=int(temp[1][0]), args=[StrategyEnums.START])
             Logger.info(f'Starting time {temp[0]} delay to {temp[1][0]}:{temp[1][1]}:{temp[1][2]}.')
         else:
+            Logger.info(f'Time wait {src.WAIT * 60}')
             src.Scheduler.add_job(self.link, trigger='cron', day_of_week='mon-fri', hour=9,
                                   minute=30, args=[StrategyEnums.START])
 
